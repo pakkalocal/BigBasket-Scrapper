@@ -26,8 +26,26 @@ def save_image(image_link, save_dir):
 
 def get_product_data(product, url, raw_data_file):
 
-    f = url.split('pc/')[1].split('/?')[0]
-    cats = f.split('/')
+    try:
+        f = url.split('pc/')[1].split('/?')[0]
+        cats = f.split('/')
+    except:
+        cats = []
+
+    try:
+        cat1 = cats[0]
+    except:
+        cat1 = ''
+
+    try:
+        cat2 = cats[1]
+    except:
+        cat2 = ''
+
+    try:
+        cat3 = cats[2]
+    except:
+        cat3 = ''
 
     img = product.find("img")['src']
     image_small = img.replace('/media/uploads/p/mm/', '/media/uploads/p/s/')
@@ -45,9 +63,9 @@ def get_product_data(product, url, raw_data_file):
             'Product': Product,
             'Quantity': Quantity,
             'Price': Price,
-            'category_1': cats[0],
-            'category_2': cats[1],
-            'category_3': cats[2],
+            'category_1': cat1,
+            'category_2': cat2,
+            'category_3': cat3,
             'image_small': image_small,
             'image_large': image_large,
             'link': url

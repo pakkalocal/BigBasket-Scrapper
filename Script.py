@@ -56,6 +56,7 @@ def get_product_data(product, url, raw_data_file):
     Product = product.find("div", {"qa": "product_name"}).find("a").text
     Quantity = product.find("span", {"data-bind": "label"}).text
     Price = product.find("span", {"class": "discnt-price"}).text
+    Mrp = product.find("span", {"class": "mp-price ng-scope"}).text
 
     with open(raw_data_file, "a") as f:
         data = json.dumps({
@@ -63,6 +64,7 @@ def get_product_data(product, url, raw_data_file):
             'Product': Product,
             'Quantity': Quantity,
             'Price': Price,
+            'Mrp': Mrp,
             'category_1': cat1,
             'category_2': cat2,
             'category_3': cat3,
@@ -70,6 +72,7 @@ def get_product_data(product, url, raw_data_file):
             'image_large': image_large,
             'link': url
         })
+        print(data)
         f.write(data + "\n")
 
     try:

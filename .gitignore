@@ -2,3 +2,4 @@ venv/
 .idea/
 debug.log
 Output/
+node_modules

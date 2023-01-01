@@ -56,7 +56,11 @@ def get_product_data(product, url, raw_data_file):
     Product = product.find("div", {"qa": "product_name"}).find("a").text
     Quantity = product.find("span", {"data-bind": "label"}).text
     Price = product.find("span", {"class": "discnt-price"}).text
-    Mrp = product.find("span", {"class": "mp-price ng-scope"}).text
+    try:
+        Mrp = product.find("span", {"class": "mp-price ng-scope"}).text
+    except:
+        Mrp = ''
+    
 
     with open(raw_data_file, "a") as f:
         data = json.dumps({

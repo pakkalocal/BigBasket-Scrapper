@@ -24,7 +24,11 @@ def save_image(image_link, save_dir):
         shutil.copyfileobj(image_raw.raw, out_file)
 
 
-def get_product_data(product, raw_data_file):
+def get_product_data(product, url, raw_data_file):
+
+    f = url.split('pc/')[1].split('/?')[0]
+    cats = f.split('/')
+
     img = product.find("img")['src']
     image_small = img.replace('/media/uploads/p/mm/', '/media/uploads/p/s/')
     image_large = img.replace('/media/uploads/p/s/', '/media/uploads/p/l/'). \
@@ -41,8 +45,12 @@ def get_product_data(product, raw_data_file):
             'Product': Product,
             'Quantity': Quantity,
             'Price': Price,
+            'category_1': cats[0],
+            'category_2': cats[1],
+            'category_3': cats[2],
             'image_small': image_small,
             'image_large': image_large,
+            'link': url
         })
         f.write(data + "\n")
 
@@ -110,7 +118,7 @@ if __name__ == "__main__":
             os.makedirs(dl_img)
 
         for product in products:
-            get_product_data(product, raw_data_file)
+            get_product_data(product, url, raw_data_file)
 
         print("Downloaded all data from: ".format(url))
 

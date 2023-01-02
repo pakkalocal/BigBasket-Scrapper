@@ -9,11 +9,12 @@ async function insertrows(rows){
     const { error } = await supabase
         .from('baseproducts')
         .insert(rows)
+    console.log(error)
 }
 
-setTimeout(() => {
+setTimeout(async() => {
 
-    var rawdata = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+    var rawdata = JSON.parse(fs.readFileSync('./results/data.json', 'utf8'));
     let rows = []
     for(let i=0; i < rawdata.length;i++){
 
@@ -28,6 +29,7 @@ setTimeout(() => {
             images: [large_img, small_img],
             quantity: rawdata[i]['Quantity'],
             price: rawdata[i]['Price'],
+            mrp: rawdata[i]['Mrp'],
             variants: [{}],
             description: '',
             rating: 0,
@@ -38,8 +40,10 @@ setTimeout(() => {
         rows.push(j);
     }
 
-    fs.writeFileSync('./supabase_baseproducts.json', JSON.stringify(rows));
+    await insertrows(rows);
+    fs.writeFileSync('./results/supabase_baseproducts.json', JSON.stringify(rows));
     
-    insertrows(rows);
+    console.log('done pushing all rows to db')
+
 }, 3*1000)
 

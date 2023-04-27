@@ -7,7 +7,7 @@ const supabase = createClient('https://aehipnblgakbmbilvbzs.supabase.co', 'eyJhb
 
 async function insertrows(rows){
     const { error } = await supabase
-        .from('baseproducts')
+        .from('gbox_products')
         .insert(rows)
     console.log(error)
 }
@@ -20,22 +20,43 @@ setTimeout(async() => {
 
         let large_img = rawdata[i]['image_large']
         let small_img = rawdata[i]['image_small']
+
+        let price = rawdata[i]['Price']
+        let mrp = rawdata[i]['Mrp']
+        if(price.includes('MRP') && mrp == ''){
+            price = parseFloat(price.split('Rs')[1].trim())
+            mrp = price
+        }else{
+            price = parseFloat(price.split('Rs')[1].trim())
+            mrp = parseFloat(mrp.split('Rs')[1].trim())
+        }
+        
+        let discount_flat = mrp - price;
+        let discount_percent = ((mrp - price)/mrp) * 100;
+
         let j = {
             name: rawdata[i]['Product'],
             brand: rawdata[i]['Brand'],
-            category_1: rawdata[i]['category_1'],
-            category_2: rawdata[i]['category_2'],
-            category_3: rawdata[i]['category_3'],
-            images: [large_img, small_img],
+            c1_meta: rawdata[i]['category_1'],
+            c2_meta: rawdata[i]['category_2'],
+            c3_meta: rawdata[i]['category_3'],
             quantity: rawdata[i]['Quantity'],
-            price: rawdata[i]['Price'],
-            mrp: rawdata[i]['Mrp'],
-            variants: [{}],
+            price: price,
+            mrp: mrp,
+            images: [large_img, small_img],
+            large_img: large_img,
+            small_img: small_img,
+            variants: [],
             description: '',
-            rating: 0,
             created_at: new Date(Date.now()).toISOString(),
             updated_at: new Date(Date.now()).toISOString(),
-            bb_link: rawdata[i]['link']
+            bb_link: rawdata[i]['link'],
+            rating: 0,
+            no_of_ratings: 0,
+            reviews: 0,
+            recommendations: 0,
+            discount_percent: discount_percent,
+            discount_flat: discount_flat
         }
         rows.push(j);
     }
